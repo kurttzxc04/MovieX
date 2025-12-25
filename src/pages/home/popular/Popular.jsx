@@ -6,28 +6,40 @@ import SwitchTabs from "../../../components/switchTabs/SwitchTabs";
 
 import useFetch from "../../../hooks/useFetch";
 
-const Popular = () => {
-    const [endpoint, setEndpoint] = useState("movie");
+const Popular = ({ selectedGenre, movieGenreMap, tvGenreMap }) => {
+    const [mediaType, setMediaType] = useState("movie");
 
-    const { data, loading } = useFetch(`/${endpoint}/popular`);
+    // Get the correct genre ID based on media type
+    const genreMap = mediaType === "movie" ? movieGenreMap : tvGenreMap;
+    const genreId = genreMap[selectedGenre];
+
+    // Build endpoint with genre filtering
+    let endpoint = `/discover/${mediaType}?sort_by=popularity.desc`;
+    if (genreId) {
+        endpoint += `&with_genres=${genreId}`;
+    }
+
+    const { data, loading } = useFetch(endpoint);
 
     const onTabChange = (tab) => {
-        setEndpoint(tab === "Movies" ? "movie" : "tv");
+        setMediaType(tab === "Movies" ? "movie" : "tv");
     };
 
     return (
-        <div className="carouselSection">
+        <div className="carousel-section">
             <ContentWrapper>
-                <span className="carouselTitle">What's Popular</span>
-                <SwitchTabs
-                    data={["Movies", "TV Shows"]}
-                    onTabChange={onTabChange}
-                />
+                <div className="carousel-section__header">
+                    <h2 className="carousel-title">What's Popular</h2>
+                    <SwitchTabs
+                        data={["Movies", "TV Shows"]}
+                        onTabChange={onTabChange}
+                    />
+                </div>
             </ContentWrapper>
             <Carousel
                 data={data?.results}
                 loading={loading}
-                endpoint={endpoint}
+                endpoint={mediaType}
             />
         </div>
     );

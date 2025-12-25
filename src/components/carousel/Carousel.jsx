@@ -36,11 +36,11 @@ const Carousel = ({ data, loading, endpoint, title }) => {
 
     const skItem = () => {
         return (
-            <div className="skeletonItem">
-                <div className="posterBlock skeleton"></div>
-                <div className="textBlock">
-                    <div className="title skeleton"></div>
-                    <div className="date skeleton"></div>
+            <div className="carousel__skeleton-item">
+                <div className="carousel__skeleton-poster skeleton"></div>
+                <div className="carousel__skeleton-text">
+                    <div className="carousel__skeleton-title skeleton"></div>
+                    <div className="carousel__skeleton-date skeleton"></div>
                 </div>
             </div>
         );
@@ -49,60 +49,78 @@ const Carousel = ({ data, loading, endpoint, title }) => {
     return (
         <div className="carousel">
             <ContentWrapper>
-                {title && <div className="carouselTitle">{title}</div>}
-                <BsFillArrowLeftCircleFill
-                    className="carouselLeftNav arrow"
-                    onClick={() => navigation("left")}
-                />
-                <BsFillArrowRightCircleFill
-                    className="carouselRighttNav arrow"
-                    onClick={() => navigation("right")}
-                />
+                <div className="carousel__header">
+                    {title && <h2 className="carousel__title">{title}</h2>}
+                    <a href="#" className="carousel__see-more">See more →</a>
+                </div>
+
                 {!loading ? (
-                    <div className="carouselItems" ref={carouselContainer}>
-                        {data?.map((item) => {
-                            const posterUrl = item.poster_path
-                                ? url.poster + item.poster_path
-                                : PosterFallback;
-                            return (
-                                <div
-                                    key={item.id}
-                                    className="carouselItem"
-                                    onClick={() =>
-                                        navigate(
-                                            `/${item.media_type || endpoint}/${
-                                                item.id
-                                            }`
-                                        )
-                                    }
-                                >
-                                    <div className="posterBlock">
-                                        <Img src={posterUrl} />
-                                        <CircleRating
-                                            rating={item.vote_average.toFixed(
-                                                1
-                                            )}
-                                        />
-                                        <Genres
-                                            data={item.genre_ids.slice(0, 2)}
-                                        />
+                    <div className="carousel__wrapper">
+                        <button
+                            className="carousel__nav carousel__nav--left"
+                            onClick={() => navigation("left")}
+                            aria-label="Scroll left"
+                        >
+                            <BsFillArrowLeftCircleFill />
+                        </button>
+
+                        <div className="carousel__items" ref={carouselContainer}>
+                            {data?.map((item) => {
+                                const posterUrl = item.poster_path
+                                    ? url.poster + item.poster_path
+                                    : PosterFallback;
+                                return (
+                                    <div
+                                        key={item.id}
+                                        className="carousel__item"
+                                        onClick={() =>
+                                            navigate(
+                                                `/${item.media_type || endpoint}/${
+                                                    item.id
+                                                }`
+                                            )
+                                        }
+                                    >
+                                        <div className="carousel__poster">
+                                            <Img src={posterUrl} />
+                                            <div className="carousel__rating">
+                                                <CircleRating
+                                                    rating={item.vote_average.toFixed(
+                                                        1
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="carousel__genres">
+                                                <Genres
+                                                    data={item.genre_ids.slice(0, 2)}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="carousel__info">
+                                            <span className="carousel__item-title">
+                                                {item.title || item.name}
+                                            </span>
+                                            <span className="carousel__item-date">
+                                                {dayjs(item.release_date || item.first_air_date).format(
+                                                    "MMM D, YYYY"
+                                                )}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="textBlock">
-                                        <span className="title">
-                                            {item.title || item.name}
-                                        </span>
-                                        <span className="date">
-                                            {dayjs(item.release_date || item.first_air_date).format(
-                                                "MMM D, YYYY"
-                                            )}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
+
+                        <button
+                            className="carousel__nav carousel__nav--right"
+                            onClick={() => navigation("right")}
+                            aria-label="Scroll right"
+                        >
+                            <BsFillArrowRightCircleFill />
+                        </button>
                     </div>
                 ) : (
-                    <div className="loadingSkeleton">
+                    <div className="carousel__loading">
                         {skItem()}
                         {skItem()}
                         {skItem()}

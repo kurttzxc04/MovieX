@@ -1,15 +1,35 @@
-.carouselSection {
+@import "../../mixins.scss";
+
+.home-page {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg-primary);
+}
+
+.carousel-section {
     position: relative;
     margin-bottom: 70px;
+    
     & > .contentWrapper {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 20px;
     }
-    .carouselTitle {
-        font-size: 24px;
-        color: white;
-        font-weight: normal;
+
+    .carousel-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        @include md {
+            font-size: 1.8rem;
+        }
+    }
+
+    @include md {
+        margin-bottom: 100px;
     }
 }

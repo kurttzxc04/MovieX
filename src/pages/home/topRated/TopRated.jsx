@@ -6,28 +6,41 @@ import SwitchTabs from "../../../components/switchTabs/SwitchTabs";
 
 import useFetch from "../../../hooks/useFetch";
 
-const TopRated = () => {
-    const [endpoint, setEndpoint] = useState("movie");
+const TopRated = ({ selectedGenre, movieGenreMap, tvGenreMap }) => {
+    const [mediaType, setMediaType] = useState("movie");
 
-    const { data, loading } = useFetch(`/${endpoint}/top_rated`);
+    // Get the correct genre ID based on media type
+    const genreMap = mediaType === "movie" ? movieGenreMap : tvGenreMap;
+    const genreId = genreMap[selectedGenre];
+
+    // Build endpoint with genre filtering
+    // For movies, sort by rating; for TV, also sort by rating
+    let endpoint = `/discover/${mediaType}?sort_by=vote_average.desc`;
+    if (genreId) {
+        endpoint += `&with_genres=${genreId}`;
+    }
+
+    const { data, loading } = useFetch(endpoint);
 
     const onTabChange = (tab) => {
-        setEndpoint(tab === "Movies" ? "movie" : "tv");
+        setMediaType(tab === "Movies" ? "movie" : "tv");
     };
 
     return (
-        <div className="carouselSection">
+        <div className="carousel-section">
             <ContentWrapper>
-                <span className="carouselTitle">Top Rated</span>
-                <SwitchTabs
-                    data={["Movies", "TV Shows"]}
-                    onTabChange={onTabChange}
-                />
+                <div className="carousel-section__header">
+                    <h2 className="carousel-title">Top Rated</h2>
+                    <SwitchTabs
+                        data={["Movies", "TV Shows"]}
+                        onTabChange={onTabChange}
+                    />
+                </div>
             </ContentWrapper>
             <Carousel
                 data={data?.results}
                 loading={loading}
-                endpoint={endpoint}
+                endpoint={mediaType}
             />
         </div>
     );

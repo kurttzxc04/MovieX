@@ -1,0 +1,74 @@
+@import "../../mixins.scss";
+
+.category-pills {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+
+    @include md {
+        gap: 12px;
+        padding: 25px 0;
+        margin-bottom: 40px;
+    }
+
+    /* Hide scrollbar */
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--text-muted);
+        border-radius: 2px;
+
+        &:hover {
+            background: var(--text-secondary);
+        }
+    }
+}
+
+.category-pill {
+    flex-shrink: 0;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+
+    @include md {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    &:hover {
+        background: rgba(229, 73, 130, 0.1);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(229, 73, 130, 0.15);
+    }
+
+    &.active {
+        background: var(--gradient-primary);
+        border-color: var(--accent-primary);
+        color: white;
+        box-shadow: 0 8px 24px rgba(229, 73, 130, 0.3);
+        animation: pulse 0.5s ease-out;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}

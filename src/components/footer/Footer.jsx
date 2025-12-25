@@ -14,34 +14,49 @@ const Footer = () => {
     return (
         <footer className="footer">
             <ContentWrapper>
-                <ul className="menuItems">
-                    <li className="menuItem">Terms Of Use</li>
-                    <li className="menuItem">Privacy-Policy</li>
-                    <li className="menuItem">About</li>
-                    <li className="menuItem">Blog</li>
-                    <li className="menuItem">FAQ</li>
-                </ul>
-                <div className="infoText">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur.
-                </div>
-                <div className="socialIcons">
-                    <span className="icon">
-                        <FaFacebookF />
-                    </span>
-                    <span className="icon">
-                        <FaInstagram />
-                    </span>
-                    <span className="icon">
-                        <FaTwitter />
-                    </span>
-                    <span className="icon">
-                        <FaLinkedin />
-                    </span>
+                <div className="footer__content">
+                    <ul className="footer__menu">
+                        <li className="footer__menu-item">
+                            <a href="#">Terms of Use</a>
+                        </li>
+                        <li className="footer__menu-item">
+                            <a href="#">Privacy Policy</a>
+                        </li>
+                        <li className="footer__menu-item">
+                            <a href="#">About Us</a>
+                        </li>
+                        <li className="footer__menu-item">
+                            <a href="#">Blog</a>
+                        </li>
+                        <li className="footer__menu-item">
+                            <a href="#">FAQ</a>
+                        </li>
+                    </ul>
+
+                    <p className="footer__text">
+                        Movix is your ultimate streaming destination for movies and TV shows.
+                        Discover thousands of titles, curated recommendations, and exclusive content.
+                        Stream, watch, and enjoy your favorite entertainment anytime, anywhere.
+                    </p>
+
+                    <div className="footer__social">
+                        <a href="#" className="footer__social-icon" aria-label="Facebook">
+                            <FaFacebookF />
+                        </a>
+                        <a href="#" className="footer__social-icon" aria-label="Instagram">
+                            <FaInstagram />
+                        </a>
+                        <a href="#" className="footer__social-icon" aria-label="Twitter">
+                            <FaTwitter />
+                        </a>
+                        <a href="#" className="footer__social-icon" aria-label="LinkedIn">
+                            <FaLinkedin />
+                        </a>
+                    </div>
+
+                    <div className="footer__bottom">
+                        <p>&copy; 2024 Movix. All rights reserved.</p>
+                    </div>
                 </div>
             </ContentWrapper>
         </footer>

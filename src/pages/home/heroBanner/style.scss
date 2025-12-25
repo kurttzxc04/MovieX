@@ -1,107 +1,262 @@
 @import "../../../mixins.scss";
 
-.heroBanner {
+.hero-banner {
+    position: relative;
     width: 100%;
-    height: 450px;
-    background-color: var(--black);
+    height: 500px;
+    background: var(--bg-primary);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     display: flex;
     align-items: center;
-    position: relative;
+    overflow: hidden;
+    margin-top: 70px;
+
     @include md {
-        height: 700px;
+        height: 750px;
     }
-    .backdrop-img {
-        width: 100%;
-        height: 100%;
+
+    /* Gradient Overlay */
+    .hero-banner__gradient {
         position: absolute;
         top: 0;
         left: 0;
-        opacity: 0.5;
-        overflow: hidden;
-        .lazy-load-image-background {
-            width: 100%;
-            height: 100%;
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-            }
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            135deg,
+            rgba(14, 15, 19, 0.9) 0%,
+            rgba(14, 15, 19, 0.7) 40%,
+            rgba(14, 15, 19, 0.85) 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Content Container */
+    .contentWrapper {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Text Content */
+    .hero-banner__content {
+        width: 100%;
+    }
+
+    .hero-banner__text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 600px;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-banner__title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.2;
+        margin-bottom: 20px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+        @include md {
+            font-size: 4rem;
+            margin-bottom: 30px;
         }
     }
-    .opacity-layer {
-        width: 100%;
-        height: 250px;
-        background: linear-gradient(
-            180deg,
-            rgba(4, 21, 45, 0) 0%,
-            #04152d 79.17%
-        );
+
+    .hero-banner__description {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 30px;
+        max-width: 500px;
+
+        @include md {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+    }
+
+    /* Action Buttons */
+    .hero-banner__actions {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+
+        @include md {
+            gap: 20px;
+        }
+    }
+
+    .hero-banner__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 28px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        @include md {
+            padding: 14px 35px;
+            font-size: 1.05rem;
+        }
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        &:active {
+            transform: translateY(-1px);
+        }
+
+        svg {
+            font-size: 1.2rem;
+        }
+    }
+
+    .hero-banner__btn--primary {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 8px 24px rgba(229, 73, 130, 0.3);
+
+        &:hover {
+            box-shadow: 0 12px 40px rgba(229, 73, 130, 0.5);
+            background: linear-gradient(
+                135deg,
+                #FF6B9D 0%,
+                #E54982 100%
+            );
+        }
+    }
+
+    .hero-banner__btn--secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        border: 1.5px solid var(--accent-primary);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        &:hover {
+            background: rgba(229, 73, 130, 0.15);
+            border-color: var(--accent-secondary);
+            box-shadow: 0 8px 24px rgba(229, 73, 130, 0.25);
+        }
+    }
+
+    /* Rating Badge */
+    .hero-banner__rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .rating-badge {
+        display: inline-block;
+        background: rgba(229, 73, 130, 0.2);
+        color: var(--accent-primary);
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid var(--accent-primary);
+    }
+
+    /* Search Section */
+    .hero-banner__search {
         position: absolute;
         bottom: 0;
         left: 0;
+        right: 0;
+        background: linear-gradient(
+            to top,
+            rgba(14, 15, 19, 0.95),
+            rgba(14, 15, 19, 0.8),
+            transparent
+        );
+        padding: 30px 0 40px;
+        z-index: 3;
     }
-    .heroBannerContent {
+
+    .hero-banner__search-box {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-        text-align: center;
-        position: relative;
-        max-width: 800px;
-        margin: 0 auto;
-        .title {
-            font-size: 50px;
-            font-weight: 700;
-            margin-bottom: 10px;
+        gap: 10px;
+        max-width: 500px;
+
+        @include md {
+            gap: 0;
+        }
+
+        input {
+            flex: 1;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 8px 0 0 8px;
+            padding: 0 18px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+
+            &::placeholder {
+                color: var(--text-muted);
+            }
+
+            &:focus {
+                outline: none;
+                background: rgba(255, 255, 255, 0.15);
+                border-color: var(--accent-primary);
+                box-shadow: 0 0 20px rgba(229, 73, 130, 0.2);
+            }
+
             @include md {
-                margin-bottom: 0;
-                font-size: 90px;
+                height: 52px;
+                border-radius: 8px 0 0 8px;
+                padding: 0 24px;
+                font-size: 1rem;
             }
         }
-        .subTitle {
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 40px;
+
+        button {
+            height: 45px;
+            padding: 0 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
             @include md {
-                font-size: 24px;
+                height: 52px;
+                padding: 0 30px;
+                font-size: 1rem;
             }
-        }
-        .searchInput {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            input {
-                width: calc(100% - 100px);
-                height: 50px;
-                background-color: white;
-                outline: 0;
-                border: 0;
-                border-radius: 30px 0 0 30px;
-                padding: 0 15px;
-                font-size: 14px;
-                @include md {
-                    width: calc(100% - 150px);
-                    height: 60px;
-                    font-size: 20px;
-                    padding: 0 30px;
-                }
+
+            &:hover {
+                box-shadow: 0 8px 24px rgba(229, 73, 130, 0.3);
+                transform: translateY(-2px);
             }
-            button {
-                width: 100px;
-                height: 50px;
-                background: var(--gradient);
-                color: white;
-                outline: 0;
-                border: 0;
-                border-radius: 0 30px 30px 0;
-                font-size: 16px;
-                cursor: pointer;
-                @include md {
-                    width: 150px;
-                    height: 60px;
-                    font-size: 18px;
-                }
+
+            &:active {
+                transform: translateY(0);
             }
         }
     }

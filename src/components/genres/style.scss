@@ -1,12 +1,16 @@
 .genres {
     display: flex;
-    gap: 5px;
-    .genre {
-        background-color: var(--pink);
-        padding: 3px 5px;
-        font-size: 12px;
-        border-radius: 4px;
-        color: white;
-        white-space: nowrap;
-    }
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.genre {
+    background: var(--gradient-primary);
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    color: white;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(229, 73, 130, 0.3);
 }

@@ -1,18 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import "./style.scss";
 
 const SwitchTabs = ({ data, onTabChange }) => {
     const [selectedTab, setSelectedTab] = useState(0);
     const [left, setLeft] = useState(0);
+    const [width, setWidth] = useState(0);
+    const tabItemsRef = useRef([]);
+
+    const updateMovingBg = (index) => {
+        const activeTabElement = tabItemsRef.current[index];
+        if (activeTabElement) {
+            setLeft(activeTabElement.offsetLeft - 4);
+            setWidth(activeTabElement.offsetWidth);
+        }
+    };
 
     const activeTab = (tab, index) => {
-        setLeft(index * 100);
-        setTimeout(() => {
-            setSelectedTab(index);
-        }, 300);
+        setSelectedTab(index);
+        updateMovingBg(index);
         onTabChange(tab, index);
     };
+
+    const handleTabRef = (el, index) => {
+        if (el) {
+            tabItemsRef.current[index] = el;
+        }
+    };
+
+    useEffect(() => {
+        updateMovingBg(selectedTab);
+    }, [selectedTab, data]);
 
     return (
         <div className="switchingTabs">
@@ -20,6 +38,7 @@ const SwitchTabs = ({ data, onTabChange }) => {
                 {data.map((tab, index) => (
                     <span
                         key={index}
+                        ref={(el) => handleTabRef(el, index)}
                         className={`tabItem ${
                             selectedTab === index ? "active" : ""
                         }`}
@@ -28,7 +47,7 @@ const SwitchTabs = ({ data, onTabChange }) => {
                         {tab}
                     </span>
                 ))}
-                <span className="movingBg" style={{ left }} />
+                <span className="movingBg" style={{ left, width }} />
             </div>
         </div>
     );
