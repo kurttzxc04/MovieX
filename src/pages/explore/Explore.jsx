@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import InfiniteScroll from "react-infinite-scroll-component";
 import Select from "react-select";
 
 import "./style.scss";
@@ -28,7 +27,8 @@ const sortbyData = [
 
 const Explore = () => {
     const [data, setData] = useState(null);
-    const [pageNum, setPageNum] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
     const [genre, setGenre] = useState(null);
     const [sortby, setSortby] = useState(null);
@@ -47,7 +47,7 @@ const Explore = () => {
         !isKidsPage ? `/genre/${mediaType}/list` : `/genre/movie/list`
     );
 
-    const fetchInitialData = () => {
+    const fetchPageData = (pageNumber) => {
         setLoading(true);
         let fetchFilters = { ...filters };
 
@@ -57,56 +57,37 @@ const Explore = () => {
             fetchFilters.with_genres = kidsGenreId;
         }
 
-        fetchDataFromApi(`/discover/${currentMediaType}`, fetchFilters).then((res) => {
-            setData(res);
-            setPageNum((prev) => prev + 1);
-            setLoading(false);
-        });
-    };
-
-    const fetchNextPageData = () => {
-        let fetchFilters = { ...filters };
-
-        // Add kids genre filter if on kids page
-        if (isKidsPage) {
-            const kidsGenreId = mediaTypeState === "movie" ? KIDS_MOVIE_ID : KIDS_TV_ID;
-            fetchFilters.with_genres = kidsGenreId;
-        }
-
         fetchDataFromApi(
-            `/discover/${currentMediaType}?page=${pageNum}`,
+            `/discover/${currentMediaType}?page=${pageNumber}`,
             fetchFilters
         ).then((res) => {
-            if (data?.results) {
-                setData({
-                    ...data,
-                    results: [...data?.results, ...res.results],
-                });
-            } else {
-                setData(res);
-            }
-            setPageNum((prev) => prev + 1);
+            setData(res);
+            setTotalPages(res.total_pages > 500 ? 500 : res.total_pages);
+            setLoading(false);
+            // Scroll to top of page
+            window.scrollTo({ top: 0, behavior: "smooth" });
         });
     };
 
     useEffect(() => {
         filters = {};
-        setData(null);
-        setPageNum(1);
+        setCurrentPage(1);
         setSortby(null);
         setGenre(null);
         if (isKidsPage) {
             setMediaTypeState("movie");
         }
-        fetchInitialData();
     }, [mediaType, isKidsPage]);
 
     useEffect(() => {
-        // Refetch when kids page switches between movie/tv
+        // Fetch data when currentPage, mediaType, or filters change
+        fetchPageData(currentPage);
+    }, [currentPage, currentMediaType]);
+
+    useEffect(() => {
+        // When switching between movie/tv on kids page, reset to page 1
         if (isKidsPage) {
-            setData(null);
-            setPageNum(1);
-            fetchInitialData();
+            setCurrentPage(1);
         }
     }, [mediaTypeState]);
 
@@ -131,21 +112,40 @@ const Explore = () => {
             }
         }
 
-        setPageNum(1);
-        fetchInitialData();
+        setCurrentPage(1);
+        fetchPageData(1);
     };
+
+    const getPageTitle = () => {
+        if (isKidsPage) {
+            return "Kids & Family";
+        }
+        return mediaType === "tv" ? "Explore TV Shows" : "Explore Movies";
+    };
+
+    // Generate page numbers to display (show max 5 pages at a time)
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage + 1 < maxPagesToShow) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
 
     return (
         <div className="explorePage">
             <ContentWrapper>
                 <div className="pageHeader">
-                    <div className="pageTitle">
-                        {isKidsPage
-                            ? "Kids & Family"
-                            : mediaType === "tv"
-                            ? "Explore TV Shows"
-                            : "Explore Movies"}
-                    </div>
+                    <div className="pageTitle">{getPageTitle()}</div>
                     <div className="filters">
                         {isKidsPage ? (
                             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -231,27 +231,79 @@ const Explore = () => {
                 {!loading && (
                     <>
                         {data?.results?.length > 0 ? (
-                            <InfiniteScroll
-                                className="content"
-                                dataLength={data?.results?.length || []}
-                                next={fetchNextPageData}
-                                hasMore={pageNum <= data?.total_pages}
-                                loader={<Spinner />}
-                            >
-                                {data?.results?.map((item, index) => {
-                                    if (item.media_type === "person") return;
-                                    return (
-                                        <MovieCard
-                                            key={index}
-                                            data={item}
-                                            mediaType={currentMediaType}
-                                        />
-                                    );
-                                })}
-                            </InfiniteScroll>
+                            <>
+                                <div className="content">
+                                    {data?.results?.map((item, index) => {
+                                        if (item.media_type === "person") return null;
+                                        return (
+                                            <MovieCard
+                                                key={index}
+                                                data={item}
+                                                mediaType={currentMediaType}
+                                            />
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Pagination Controls */}
+                                <div className="pagination">
+                                    <button
+                                        className="pagination__btn pagination__btn--first"
+                                        onClick={() => setCurrentPage(1)}
+                                        disabled={currentPage === 1 || loading}
+                                        title="First page"
+                                    >
+                                        «
+                                    </button>
+                                    <button
+                                        className="pagination__btn pagination__btn--prev"
+                                        onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                                        disabled={currentPage === 1 || loading}
+                                        title="Previous page"
+                                    >
+                                        ‹
+                                    </button>
+
+                                    <div className="pagination__numbers">
+                                        {getPageNumbers().map((page) => (
+                                            <button
+                                                key={page}
+                                                className={`pagination__number ${
+                                                    page === currentPage ? "active" : ""
+                                                }`}
+                                                onClick={() => setCurrentPage(page)}
+                                                disabled={loading}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        className="pagination__btn pagination__btn--next"
+                                        onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                                        disabled={currentPage === totalPages || loading}
+                                        title="Next page"
+                                    >
+                                        ›
+                                    </button>
+                                    <button
+                                        className="pagination__btn pagination__btn--last"
+                                        onClick={() => setCurrentPage(totalPages)}
+                                        disabled={currentPage === totalPages || loading}
+                                        title="Last page"
+                                    >
+                                        »
+                                    </button>
+                                </div>
+
+                                <div className="pagination__info">
+                                    Page {currentPage} of {totalPages}
+                                </div>
+                            </>
                         ) : (
                             <span className="resultNotFound">
-                                Sorry, Results not found!
+                                Sorry, couldn't find the movies you are looking for!
                             </span>
                         )}
                     </>
