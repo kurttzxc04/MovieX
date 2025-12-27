@@ -68,6 +68,8 @@ const Header = () => {
             navigate("/explore/movie");
         } else if (type === "tv") {
             navigate("/explore/tv");
+        } else if (type === "kids") {
+            navigate("/explore/kids");
         } else {
             navigate("/");
         }
@@ -102,7 +104,7 @@ const Header = () => {
                         </button>
                         <button 
                             className="navbar__menu-item"
-                            onClick={() => navigationHandler("tv")}
+                            onClick={() => navigationHandler("kids")}
                         >
                             Kids
                         </button>
