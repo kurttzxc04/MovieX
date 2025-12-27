@@ -1,9 +1,9 @@
 import React from "react";
 import {
-    FaFacebookF,
     FaInstagram,
     FaTwitter,
     FaLinkedin,
+    FaGithub,
 } from "react-icons/fa";
 
 import ContentWrapper from "../contentWrapper/ContentWrapper";
@@ -40,17 +40,17 @@ const Footer = () => {
                     </p>
 
                     <div className="footer__social">
-                        <a href="#" className="footer__social-icon" aria-label="Facebook">
-                            <FaFacebookF />
-                        </a>
-                        <a href="#" className="footer__social-icon" aria-label="Instagram">
-                            <FaInstagram />
+                        <a href="#" className="footer__social-icon" aria-label="LinkedIn">
+                            <FaLinkedin />
                         </a>
                         <a href="#" className="footer__social-icon" aria-label="Twitter">
                             <FaTwitter />
                         </a>
-                        <a href="#" className="footer__social-icon" aria-label="LinkedIn">
-                            <FaLinkedin />
+                        <a href="#" className="footer__social-icon" aria-label="Instagram">
+                            <FaInstagram />
+                        </a>
+                        <a href="#" className="footer__social-icon" aria-label="GitHub">
+                            <FaGithub />
                         </a>
                     </div>
 
