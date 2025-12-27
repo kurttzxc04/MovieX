@@ -11,6 +11,7 @@ const HeroBanner = () => {
     const [background, setBackground] = useState("");
     const [query, setQuery] = useState("");
     const [movie, setMovie] = useState(null);
+    const [scrollY, setScrollY] = useState(0);
     const navigate = useNavigate();
     const { url } = useSelector((state) => state.home);
     const { data, loading } = useFetch("/movie/upcoming");
@@ -23,6 +24,16 @@ const HeroBanner = () => {
             setBackground(bg);
         }
     }, [data]);
+
+    // Handle scroll effect
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const searchQueryHandler = (event) => {
         if (event.key === "Enter" && query.length > 0) {
@@ -37,7 +48,14 @@ const HeroBanner = () => {
     };
 
     return (
-        <div className="hero-banner" style={background ? { backgroundImage: `url(${background})` } : {}}>
+        <div 
+            className="hero-banner" 
+            style={{
+                backgroundImage: background ? `url(${background})` : "",
+                filter: `blur(${Math.min(scrollY / 300, 4)}px)`,
+                opacity: Math.max(1 - scrollY / 500, 0.7),
+            }}
+        >
             <div className="hero-banner__gradient"></div>
 
             <ContentWrapper>

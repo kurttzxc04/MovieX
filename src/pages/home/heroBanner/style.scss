@@ -12,6 +12,8 @@
     align-items: center;
     overflow: hidden;
     margin-top: 70px;
+    will-change: filter, opacity;
+    transition: filter 0.1s ease, opacity 0.1s ease;
 
     @include md {
         height: 750px;
