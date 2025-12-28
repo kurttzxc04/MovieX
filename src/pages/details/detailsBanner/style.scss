@@ -260,10 +260,21 @@
                     flex-direction: column;
                     align-items: center;
                     gap: 8px;
-                    transition: transform 0.3s ease;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    text-decoration: none;
+                    color: inherit;
 
                     &:hover {
                         transform: translateY(-4px);
+                        
+                        .platform-logo {
+                            box-shadow: 0 8px 20px rgba(229, 73, 130, 0.5);
+                        }
+                        
+                        .platform-name {
+                            color: var(--accent-primary);
+                        }
                     }
 
                     .platform-logo {
@@ -272,6 +283,7 @@
                         border-radius: 8px;
                         object-fit: cover;
                         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                        transition: all 0.3s ease;
                         
                         @include md {
                             width: 60px;
@@ -287,6 +299,7 @@
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
+                        transition: all 0.3s ease;
                     }
                 }
 
