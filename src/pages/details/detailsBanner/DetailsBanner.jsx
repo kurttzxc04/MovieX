@@ -45,17 +45,30 @@ const DetailsBanner = ({ video, crew }) => {
         
         // Platform-specific URL mapping based on TMDB provider IDs
         const platformUrls = {
+            // Global Services
             8: 'https://www.netflix.com', // Netflix
-            9: 'https://www.primevideo.com', // Amazon Prime Video
+            9: 'https://www.primevideo.com', // Amazon Prime Video (Global)
+            119: 'https://www.primevideo.com', // Amazon Prime Video (India)
+            2: 'https://tv.apple.com', // Apple TV
+            350: 'https://tv.apple.com', // Apple TV+
+            11: 'https://mubi.com', // MUBI
+            283: 'https://www.crunchyroll.com', // Crunchyroll
+            344: 'https://www.viki.com', // Rakuten Viki
+            
+            // India-specific Services
+            232: 'https://www.zee5.com', // ZEE5
+            237: 'https://www.sonyliv.com', // SonyLiv
+            532: 'https://www.aha.video', // Aha
+            122: 'https://www.hotstar.com', // Disney+ Hotstar (JioHotstar)
+            
+            // Other popular services
             337: 'https://www.disneyplus.com', // Disney+
             384: 'https://www.max.com', // HBO Max
             15: 'https://www.hulu.com', // Hulu
-            350: 'https://tv.apple.com', // Apple TV+
             531: 'https://www.paramountplus.com', // Paramount+
             386: 'https://www.peacocktv.com', // Peacock
             1899: 'https://www.max.com', // Max
-            2: imdbId ? `https://www.primevideo.com/detail/${imdbId}` : 'https://www.primevideo.com', // Apple TV (rent/buy)
-            3: imdbId ? `https://play.google.com/store/movies` : 'https://play.google.com/store/movies', // Google Play
+            3: 'https://play.google.com/store/movies', // Google Play
         };
 
         return platformUrls[providerId] || `https://www.google.com/search?q=${encodeURIComponent(data?.title || data?.name)} ${providerName} watch online`;
@@ -242,39 +255,56 @@ const DetailsBanner = ({ video, crew }) => {
                                         )}
 
                                         {/* Where to Watch Section */}
-                                        {watchProviders?.results?.US?.flatrate && (
-                                            <div className="whereToWatch">
-                                                <div className="heading">Available On</div>
-                                                <div className="platforms">
-                                                    {watchProviders.results.US.flatrate.map((provider) => {
-                                                        const platformUrl = getPlatformUrl(provider.provider_id, provider.provider_name);
-                                                        
-                                                        return (
-                                                            <a 
-                                                                key={provider.provider_id} 
-                                                                href={platformUrl}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="platform"
-                                                            >
-                                                                <Img
-                                                                    src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
-                                                                    alt={provider.provider_name}
-                                                                    className="platform-logo"
-                                                                />
-                                                                <span className="platform-name">{provider.provider_name}</span>
-                                                            </a>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        )}
-                                        {watchProviders?.results && !watchProviders.results.US?.flatrate && (
-                                            <div className="whereToWatch">
-                                                <div className="heading">Available On</div>
-                                                <p className="not-available">Streaming availability not found</p>
-                                            </div>
-                                        )}
+                                        {(() => {
+                                            // Combine providers from both US and India regions
+                                            const usFlatrate = watchProviders?.results?.US?.flatrate || [];
+                                            const inFlatrate = watchProviders?.results?.IN?.flatrate || [];
+                                            
+                                            // Merge and deduplicate providers based on provider_id
+                                            const allProviders = [...usFlatrate, ...inFlatrate];
+                                            const uniqueProviders = allProviders.filter(
+                                                (provider, index, self) => 
+                                                    index === self.findIndex((p) => p.provider_id === provider.provider_id)
+                                            );
+                                            
+                                            if (uniqueProviders.length > 0) {
+                                                return (
+                                                    <div className="whereToWatch">
+                                                        <div className="heading">Available On</div>
+                                                        <div className="platforms">
+                                                            {uniqueProviders.map((provider) => {
+                                                                const platformUrl = getPlatformUrl(provider.provider_id, provider.provider_name);
+                                                                
+                                                                return (
+                                                                    <a 
+                                                                        key={provider.provider_id} 
+                                                                        href={platformUrl}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="platform"
+                                                                    >
+                                                                        <Img
+                                                                            src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                                                                            alt={provider.provider_name}
+                                                                            className="platform-logo"
+                                                                        />
+                                                                        <span className="platform-name">{provider.provider_name}</span>
+                                                                    </a>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            } else if (watchProviders?.results) {
+                                                return (
+                                                    <div className="whereToWatch">
+                                                        <div className="heading">Available On</div>
+                                                        <p className="not-available">Streaming availability not found</p>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        })()}
                                     </div>
                                 </div>
                                 <VideoPopup

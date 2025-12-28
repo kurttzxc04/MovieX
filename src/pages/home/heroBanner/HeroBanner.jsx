@@ -9,7 +9,6 @@ import ContentWrapper from "../../../components/contentWrapper/ContentWrapper";
 
 const HeroBanner = () => {
     const [background, setBackground] = useState("");
-    const [query, setQuery] = useState("");
     const [movie, setMovie] = useState(null);
     const [scrollY, setScrollY] = useState(0);
     const navigate = useNavigate();
@@ -34,12 +33,6 @@ const HeroBanner = () => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-    const searchQueryHandler = (event) => {
-        if (event.key === "Enter" && query.length > 0) {
-            navigate(`/search/${query}`);
-        }
-    };
 
     const handleWatchNow = () => {
         if (movie) {
@@ -96,27 +89,6 @@ const HeroBanner = () => {
                     </div>
                 </div>
             </ContentWrapper>
-
-            <div className="hero-banner__search">
-                <ContentWrapper>
-                    <div className="hero-banner__search-box">
-                        <input
-                            type="text"
-                            placeholder="Search for a movie or series..."
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            onKeyUp={searchQueryHandler}
-                        />
-                        <button onClick={() => {
-                            if (query.length > 0) {
-                                navigate(`/search/${query}`);
-                            }
-                        }}>
-                            Search
-                        </button>
-                    </div>
-                </ContentWrapper>
-            </div>
         </div>
     );
 };
