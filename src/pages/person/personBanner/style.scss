@@ -1,0 +1,113 @@
+@import "../../../mixins.scss";
+
+.person-banner {
+    padding: 120px 0 50px;
+    background: var(--bg-primary);
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        @include md {
+            flex-direction: row;
+            gap: 50px;
+        }
+    }
+
+    &__image {
+        flex-shrink: 0;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+
+        @include md {
+            max-width: 350px;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    }
+
+    &__info {
+        flex: 1;
+        color: var(--text-primary);
+    }
+
+    &__name {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: var(--text-primary);
+
+        @include md {
+            font-size: 42px;
+        }
+    }
+
+    &__detail {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        font-size: 16px;
+
+        .label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 100px;
+        }
+
+        .value {
+            color: var(--text-secondary);
+        }
+    }
+
+    &__biography {
+        margin-top: 30px;
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            white-space: pre-line;
+        }
+    }
+
+    &__skeleton {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+
+        @include md {
+            flex-direction: row;
+            gap: 50px;
+        }
+
+        .person-banner__image {
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 2/3;
+
+            @include md {
+                max-width: 350px;
+            }
+        }
+
+        .person-banner__info {
+            flex: 1;
+        }
+    }
+}

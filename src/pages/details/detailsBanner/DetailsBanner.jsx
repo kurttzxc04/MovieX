@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import { HiPlay } from "react-icons/hi";
 
 import "./style.scss";
 
@@ -20,6 +21,7 @@ const DetailsBanner = ({ video, crew }) => {
 
     const { mediaType, id } = useParams();
     const { data, loading } = useFetch(`/${mediaType}/${id}`);
+    const { data: watchProviders } = useFetch(`/${mediaType}/${id}/watch/providers`);
 
     const { url } = useSelector((state) => state.home);
 
@@ -49,20 +51,34 @@ const DetailsBanner = ({ video, crew }) => {
                             <ContentWrapper>
                                 <div className="content">
                                     <div className="left">
-                                        {data.poster_path ? (
-                                            <Img
-                                                className="posterImg"
-                                                src={
-                                                    url.backdrop +
-                                                    data.poster_path
-                                                }
-                                            />
-                                        ) : (
-                                            <Img
-                                                className="posterImg"
-                                                src={PosterFallback}
-                                            />
-                                        )}
+                                        <div className="poster-container">
+                                            {data.poster_path ? (
+                                                <Img
+                                                    className="posterImg"
+                                                    src={
+                                                        url.backdrop +
+                                                        data.poster_path
+                                                    }
+                                                />
+                                            ) : (
+                                                <Img
+                                                    className="posterImg"
+                                                    src={PosterFallback}
+                                                />
+                                            )}
+                                            {video && (
+                                                <div 
+                                                    className="trailer-overlay"
+                                                    onClick={() => {
+                                                        setShow(true);
+                                                        setVideoId(video.key);
+                                                    }}
+                                                >
+                                                    <HiPlay className="play-icon" />
+                                                    <span className="trailer-text">Watch Trailer</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                     <div className="right">
                                         <div className="title">
@@ -199,6 +215,31 @@ const DetailsBanner = ({ video, crew }) => {
                                                         )
                                                     )}
                                                 </span>
+                                            </div>
+                                        )}
+
+                                        {/* Where to Watch Section */}
+                                        {watchProviders?.results?.US?.flatrate && (
+                                            <div className="whereToWatch">
+                                                <div className="heading">Available On</div>
+                                                <div className="platforms">
+                                                    {watchProviders.results.US.flatrate.map((provider) => (
+                                                        <div key={provider.provider_id} className="platform">
+                                                            <Img
+                                                                src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                                                                alt={provider.provider_name}
+                                                                className="platform-logo"
+                                                            />
+                                                            <span className="platform-name">{provider.provider_name}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                        {watchProviders?.results && !watchProviders.results.US?.flatrate && (
+                                            <div className="whereToWatch">
+                                                <div className="heading">Available On</div>
+                                                <p className="not-available">Streaming availability not found</p>
                                             </div>
                                         )}
                                     </div>

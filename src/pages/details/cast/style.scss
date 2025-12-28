@@ -21,12 +21,28 @@
         .listItem {
             text-align: center;
             color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-8px);
+                
+                .profileImg {
+                    box-shadow: 0 8px 24px rgba(229, 73, 130, 0.4);
+                }
+
+                .name {
+                    color: var(--accent-primary);
+                }
+            }
+
             .profileImg {
                 width: 125px;
                 height: 125px;
                 border-radius: 50%;
                 overflow: hidden;
                 margin-bottom: 15px;
+                transition: all 0.3s ease;
                 @include md {
                     width: 175px;
                     height: 175px;
@@ -44,6 +60,7 @@
                 font-size: 14px;
                 line-height: 20px;
                 font-weight: 600;
+                transition: color 0.3s ease;
                 @include md {
                     font-size: 18px;
                     line-height: 24px;
